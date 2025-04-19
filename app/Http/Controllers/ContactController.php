@@ -6,6 +6,11 @@ use App\Models\Contact;
 use App\Services\CountryService;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use App\Notifications\ContactCreateNotification;
+use Illuminate\Support\Facades\Notification;
+use App\Events\ContactEvent;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 use Illuminate\Routing\Controller;
 
 class ContactController extends Controller
@@ -46,8 +51,10 @@ class ContactController extends Controller
             'country' => 'required|string|max:255',
             'country_flag' => 'nullable|string',
         ]);
-
-        Contact::create($validated);
+        
+        $contact = Contact::create($validated);
+        event(new ContactEvent($contact));
+        
 
         return redirect()->route('contacts.index')->with('success', 'Contact créé avec succès.');
     }
