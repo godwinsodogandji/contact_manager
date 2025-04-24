@@ -18,7 +18,7 @@ class ContactEvent
     /**
      * Create a new event instance.
      */
-    public function __construct(public Contact $contact)
+    public function __construct(public Contact $contact, public string $action = 'create',   )
     {
         // dd('ContactEvent', $this->contact);
     }

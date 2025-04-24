@@ -83,13 +83,21 @@ class ContactController extends Controller
 
         $contact->update($validated);
 
+    // Déclencher l'événement avec un type pour différencier l'action
+    event(new ContactEvent($contact, 'update'));
+
         return redirect()->route('contacts.index')->with('success', 'Contact mis à jour avec succès.');
     }
 
     // Supprimer un contact
     public function destroy(Contact $contact)
     {
+          // Stocker les données du contact avant suppression
+        $contactData = $contact->toArray();
         $contact->delete();
+
+        // Déclencher l'événement avec un type pour différencier l'action
+        event(new ContactEvent(new Contact($contactData), 'delete'));
 
         return redirect()->route('contacts.index')->with('success', 'Contact supprimé avec succès.');
     }
